@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  openid.authority:
+    build:
+      context: "C:\\Personal\\MyGitHubRepos\\OpenIddict\\OpenId"
+      dockerfile: "DockerOpenIdAuthority/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/OpenId.Authority.dll"
+    environment:
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net9.0/OpenId.Authority.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "authority-image:dev"
+    ports: []
+    volumes:
+    - "C:\\Personal\\MyGitHubRepos\\OpenIddict\\OpenId\\OpenId.Authority:/app:rw"
+    - "C:\\Personal\\MyGitHubRepos\\OpenIddict\\OpenId:/src:rw"
+    - "C:\\Users\\VanhoeyB\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
