@@ -9,7 +9,7 @@ public static class CorsRegistration
             options.AddPolicy("CorsPolicy", policy =>
             {
                 policy
-                    .WithOrigins("https://localhost:7002")
+                    .WithOrigins(["https://localhost:7002", "http://localhost:7002"])
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
