@@ -17,7 +17,7 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddAuthorizationCore();
 
-var serverBaseAddress = builder.Configuration["AuthorityUrl"] ?? "https://localhost:7000";
+var serverBaseAddress = builder.Configuration["AuthorityUrl"] ?? "http://localhost:7000";
 
 builder.Services.AddTransient<CustomAuthenticationHandler>();
 builder.Services.AddHttpClient("ApiHttpClient",
