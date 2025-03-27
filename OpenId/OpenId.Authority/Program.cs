@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using OpenId.Authority.Data;
 using OpenId.Authority.ServiceRegistration;
 using OpenId.Authority.Services;
@@ -34,7 +36,7 @@ namespace OpenId.Authority
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await dbContext.Database.EnsureCreatedAsync();
+
                 await dbContext.Database.MigrateAsync();
                 
                 var clientSeeder = scope.ServiceProvider.GetRequiredService<ClientSeeder>();
@@ -43,6 +45,7 @@ namespace OpenId.Authority
                 clientSeeder.AddAuthorizationClient().GetAwaiter().GetResult();
                 clientSeeder.AddWebClient().GetAwaiter().GetResult();
                 clientSeeder.AddReactClient().GetAwaiter().GetResult();
+                clientSeeder.AddBlazorWasmClient().GetAwaiter().GetResult();
                 clientSeeder.AddScopes().GetAwaiter().GetResult();
             }
             

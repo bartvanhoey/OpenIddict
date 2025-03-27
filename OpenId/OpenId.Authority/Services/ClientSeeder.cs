@@ -117,6 +117,45 @@ public class ClientSeeder
                 //}
             });
         }
+    
+    public async Task AddBlazorWasmClient()
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await context.Database.EnsureCreatedAsync();
+
+            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+            var client = await manager.FindByClientIdAsync("blazorwasm-oidc-application");
+            if (client != null)
+            {
+                await manager.DeleteAsync(client);
+            }
+
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = "blazorwasm-oidc-application",
+                ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C206",
+                ConsentType = OpenIddictConstants.ConsentTypes.Explicit,
+                DisplayName = "BlazorWasm Application",
+                RedirectUris =
+                {
+                    
+                    new Uri("https://localhost:7002/authentication/login-callback")
+                },
+                PostLogoutRedirectUris =
+                {
+                    new Uri("https://localhost:7002/authentication/logout-callback")
+                },
+                Permissions =
+                {
+                    OpenIddictConstants.Permissions.GrantTypes.Password,
+                   $"{OpenIddictConstants.Permissions.Prefixes.Scope}api1"
+                },
+            });
+        }
+    
 
         public async Task AddReactClient()
         {

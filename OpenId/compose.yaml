@@ -10,7 +10,7 @@
       ACCEPT_EULA: "Y"
     
   openid.authority:
-    image: authority-image
+    image: img-authority
     build:
       context: .
       dockerfile: DockerOpenIdAuthority/Dockerfile
@@ -22,8 +22,8 @@
       - mssqlserver
     container_name: ctr-openid-authority
 
-
   openid.blazorwasm:
+    image: img-blazorwasm
     build:
       context: .
       dockerfile: DockerOpenIdBlazorWasm/Dockerfile

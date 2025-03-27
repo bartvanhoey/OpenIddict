@@ -1,0 +1,84 @@
+﻿@page "/account/login"
+
+@using System.Net
+@using System.Net.Http.Headers
+@using Microsoft.AspNetCore.Components.Authorization
+
+@using OpenId.BlazorWasm.Infra
+@using OpenId.Shared.Models
+@inject NavigationManager NavigationManager
+@inject IHttpClientFactory HttpClientFactory
+@inject AuthenticationStateProvider AuthState
+
+<div class="card mt-3 shadow-sm rounded auth-card">
+    <div class="px-4 pt-4">
+        <h2 class="card-title">Log in</h2>
+        <hr/>
+    </div>
+    <div class="card-body p-4 h-100">
+        <EditForm class="d-flex flex-column h-100" Model="LoginInputModel" method="post" OnValidSubmit="LoginUserAsync"
+                  FormName="login">
+            <DataAnnotationsValidator/>
+            <div class="form-floating mb-3">
+                <InputText id="email" @bind-Value="LoginInputModel.Email" class="form-control" autocomplete="username"
+                           aria-required="true"/>
+                <label for="email" class="form-label">Email</label>
+                <ValidationMessage For="() => LoginInputModel.Email" class="text-danger"/>
+            </div>
+            <div class="form-floating mb-3">
+                <InputText id="password" type="password"
+                           @bind-Value="LoginInputModel.Password" class="form-control" autocomplete="current-password"
+                           aria-required="true"/>
+                <label for="password" class="form-label">Password</label>
+                <ValidationMessage For="() => LoginInputModel.Password" class="text-danger"/>
+            </div>
+            <div class="mt-auto">
+                <button type="submit" class="w-100 mt-3 btn btn-lg btn-primary">Log in</button>
+                <p class="mt-3">
+                    Don't have an account?
+                    <a class="card-link"
+                       href="@(NavigationManager.GetUriWithQueryParameters("account/register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">
+                        Sign up</a>
+                </p>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+
+
+
+@code {
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+    [SupplyParameterFromForm] private LoginInputModel LoginInputModel { get; set; } = new();
+
+    private async Task LoginUserAsync()
+    {
+        var httpclient = HttpClientFactory.CreateClient("ApiHttpClient");
+        //httpclient.DefaultRequestHeaders.Add( "Content-Type", "application/x-www-form-urlencoded" );
+        
+        
+        // httpclient.DefaultRequestHeaders.Add("Content-Type","application/x-www-form-urlencoded");
+        httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
+        
+        // Set up the request content
+        var values = new Dictionary<string, string>
+        {
+            { "grant_type", "password" },
+            { "username", "bartvanhoey@hotmail.com" },
+            { "password", "Server2008!" },
+            { "client_id", "blazorwasm-oidc-application" },
+            { "client_secret", "388D45FA-B36B-4988-BA59-B187D329C206" }
+        };
+        var content = new FormUrlEncodedContent(values);
+        
+        var response = await httpclient.PostAsJsonAsync("connect/token", content);
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            var result = await response.Content.ReadFromJsonAsync<LoginResult>();
+            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.AccessToken, result?.RefreshToken);
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+}

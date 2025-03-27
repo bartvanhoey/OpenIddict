@@ -9,10 +9,9 @@ public static class CorsRegistration
             options.AddPolicy("CorsPolicy", policy =>
             {
                 policy
-                    .WithOrigins(["https://localhost:7152"])
-                    .SetIsOriginAllowed(_ => true)
-                    .AllowAnyMethod()
+                    .WithOrigins("https://localhost:7002")
                     .AllowAnyHeader()
+                    .AllowAnyMethod()
                     .AllowCredentials();
             });
         });

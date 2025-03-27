@@ -31,10 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\OpenId.Shared\OpenId.Shared.csproj" />
   </ItemGroup>
 

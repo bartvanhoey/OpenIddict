@@ -1,3 +1,7 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using OpenId.Authority.Areas.Identity.Pages.Account.Manage
+@using OpenId.Authority.Data
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
