@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["OpenId.Authority/OpenId.Authority.csproj", "OpenId.Authority/"]
+COPY ["OpenId.Shared/OpenId.Shared.csproj", "OpenId.Shared/"]
 RUN dotnet restore "OpenId.Authority/OpenId.Authority.csproj"
 COPY . .
 WORKDIR "/src/OpenId.Authority"

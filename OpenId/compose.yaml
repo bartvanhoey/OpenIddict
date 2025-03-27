@@ -2,7 +2,7 @@
 
   mssqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
-    container_name: mssqlserver
+    container_name: ctr-mssqlserver
     ports:
       - "1433:1433"
     environment:
@@ -20,5 +20,13 @@
       - ASPNETCORE_ENVIRONMENT=Production
     depends_on:
       - mssqlserver
-    container_name: openid-authority
+    container_name: ctr-openid-authority
 
+
+  openid.blazorwasm:
+    build:
+      context: .
+      dockerfile: DockerOpenIdBlazorWasm/Dockerfile
+    ports:
+      - "7002:80"
+    container_name: ctr-openid-blazorwasm

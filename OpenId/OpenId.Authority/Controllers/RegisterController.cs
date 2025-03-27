@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenId.Authority.Data;
-using OpenId.Authority.Model;
+using OpenId.Shared.Models;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace OpenId.Authority.Controllers;

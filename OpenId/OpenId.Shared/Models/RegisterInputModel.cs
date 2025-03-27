@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace OpenId.Authority.Model;
+namespace OpenId.Shared.Models;
 
 public class RegisterInputModel
 {
