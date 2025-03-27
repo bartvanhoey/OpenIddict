@@ -51,21 +51,21 @@ public class JwtTokenService(ILocalStorageService localStorage, IConfiguration c
     {
         if (string.IsNullOrWhiteSpace(accessToken)) return false;
         
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var validationParameters = GetValidationParameters();
-
-        // ReSharper disable once NotAccessedOutParameterVariable
-        SecurityToken securityToken;
-        try
-        {
-            // ReSharper disable once UnusedVariable
-            IPrincipal principal = tokenHandler.ValidateToken(accessToken, validationParameters, out securityToken);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            return false;
-        }
+        // var tokenHandler = new JwtSecurityTokenHandler();
+        // var validationParameters = GetValidationParameters();
+        //
+        // // ReSharper disable once NotAccessedOutParameterVariable
+        // SecurityToken securityToken;
+        // try
+        // {
+        //     // ReSharper disable once UnusedVariable
+        //     IPrincipal principal = tokenHandler.ValidateToken(accessToken, validationParameters, out securityToken);
+        // }
+        // catch (Exception e)
+        // {
+        //     Console.WriteLine(e.Message);
+        //     return false;
+        // }
         return true;
     }
 

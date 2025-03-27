@@ -69,16 +69,20 @@
             { "password", "Server2008!" },
             { "client_id", "blazorwasm-oidc-application" },
             { "client_secret", "388D45FA-B36B-4988-BA59-B187D329C206" }
+            
         };
-        var content = new FormUrlEncodedContent(values);
+        var formUrlEncodedContent = new FormUrlEncodedContent(values);
         
-        var response = await httpclient.PostAsJsonAsync("connect/token", content);
+        var response = await httpclient.PostAsync("connect/token", formUrlEncodedContent);
         if (response.StatusCode == HttpStatusCode.OK)
         {
+            var content     = await response.Content.ReadAsStringAsync();
             var result = await response.Content.ReadFromJsonAsync<LoginResult>();
-            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.AccessToken, result?.RefreshToken);
+            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.access_token );
             NavigationManager.NavigateTo("/");
         }
     }
+
+
 
 }

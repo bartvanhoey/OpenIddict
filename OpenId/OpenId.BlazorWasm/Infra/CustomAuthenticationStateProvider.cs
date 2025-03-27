@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
+using OpenIddict.Client;
 using static System.Threading.Tasks.Task;
 
 namespace OpenId.BlazorWasm.Infra
 {
-    public class CustomAuthenticationStateProvider(IHttpClientFactory clientFactory, IJwtTokenService jwtTokenService) : AuthenticationStateProvider
+    public class CustomAuthenticationStateProvider(IHttpClientFactory clientFactory, IJwtTokenService jwtTokenService ) : AuthenticationStateProvider
     {
         private readonly ClaimsPrincipal _unAuthenticated = new(new ClaimsIdentity());
 
@@ -12,6 +13,7 @@ namespace OpenId.BlazorWasm.Infra
         {
             try
             {
+                
                 var authTokens = await jwtTokenService.GetAuthTokensAsync();
                 var refreshService = new RefreshService(clientFactory, jwtTokenService);
                 
@@ -29,7 +31,7 @@ namespace OpenId.BlazorWasm.Infra
             catch { return new AuthenticationState(_unAuthenticated); }
         }
 
-        public async Task<bool> UpdateAuthenticationState(string? accessToken, string? refreshToken)
+        public async Task<bool> UpdateAuthenticationState(string? accessToken, string? refreshToken = null)
         {
             try
             {
