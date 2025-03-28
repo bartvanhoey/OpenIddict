@@ -25,7 +25,6 @@ RUN dotnet publish "OpenId.BlazorWasm.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 
 FROM  nginxbase AS final
 WORKDIR /usr/share/nginx/html
-RUN #rm -f /usr/share/nginx/html/appsettings.json
 
 COPY  OpenId.BlazorWasm/nginx.conf /etc/nginx/nginx.conf
 
