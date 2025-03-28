@@ -20,7 +20,7 @@ builder.Services.AddAuthorizationCore();
 var serverBaseAddress = builder.Configuration["AuthorityUrl"] ?? "http://localhost:7000";
 
 builder.Services.AddTransient<CustomAuthenticationHandler>();
-builder.Services.AddHttpClient("ApiHttpClient",
+builder.Services.AddHttpClient("AuthorityHttpClient",
         client =>
         {
             client.BaseAddress = new Uri(serverBaseAddress);

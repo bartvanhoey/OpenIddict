@@ -10,10 +10,11 @@
 @inject NavigationManager NavigationManager
 @inject IHttpClientFactory HttpClientFactory
 @inject AuthenticationStateProvider AuthState
+@inject IConfiguration Configuration
 
 <div class="card mt-3 shadow-sm rounded auth-card">
     <div class="px-4 pt-4">
-        <h2 class="card-title">Log in</h2>
+        <h2 class="card-title">Log in @Environment</h2>
         <hr/>
     </div>
     <div class="card-body p-4 h-100">
@@ -53,7 +54,7 @@
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
     [SupplyParameterFromForm] private LoginInputModel LoginInputModel { get; set; } = new();
     
-    
+    // Bugfix
     // ConstructorContainsNullParameterNames, System.Net.Http.FormUrlEncodedContent System.NotSupportedException: ConstructorContainsNullParameterNames, System.Net.Http.FormUrlEncodedContent
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors, typeof(Dictionary<string, string>))]
     private readonly Dictionary<string, string> _values = new()
@@ -66,19 +67,10 @@
             
     };
     
-
     private async Task LoginUserAsync()
     {
-        var httpclient = HttpClientFactory.CreateClient("ApiHttpClient");
-        //httpclient.DefaultRequestHeaders.Add( "Content-Type", "application/x-www-form-urlencoded" );
-        
-        
-        // httpclient.DefaultRequestHeaders.Add("Content-Type","application/x-www-form-urlencoded");
+        var httpclient = HttpClientFactory.CreateClient("AuthorityHttpClient");
         httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-        
-        // Set up the request content
-        
-        
         var formUrlEncodedContent = new FormUrlEncodedContent(_values);
         
         var response = await httpclient.PostAsync("connect/token", formUrlEncodedContent);
@@ -91,6 +83,12 @@
         }
     }
 
+    protected override void OnInitialized()
+    {
+        Environment = Configuration.GetValue<string>("Environment");
+    }
+
+    public string? Environment { get; set; }
 
 
 }

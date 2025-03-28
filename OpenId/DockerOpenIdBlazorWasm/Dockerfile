@@ -25,8 +25,10 @@ RUN dotnet publish "OpenId.BlazorWasm.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 FROM  nginxbase AS final
 WORKDIR /usr/share/nginx/html
 
-# RUN apk add jq
-# COPY ["OpenId.BlazorWasm/script.sh", "/docker-entrypoint.d/40-script.sh"]
+ARG BLAZOR_ENVIRONMENT
+RUN echo 'HelloWorld'
+RUN echo ${BLAZOR_ENVIRONMENT}
 
-COPY --from=publish /app/publish/wwwroot .
+COPY --from=publish /app/publish/wwwroot .                   
 COPY  OpenId.BlazorWasm/nginx.conf /etc/nginx/nginx.conf
+RUN sed -i 's/BLAZOR_ENVIRONMENT/${BLAZOR_ENVIRONMENT}/' /etc/nginx/nginx.conf

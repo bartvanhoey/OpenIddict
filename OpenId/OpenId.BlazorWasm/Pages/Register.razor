@@ -1,6 +1,5 @@
 @page "/account/register"
 @using System.Net
-@using OpenId.BlazorWasm.Infra
 @using OpenId.Shared.Models
 
 @inject NavigationManager NavigationManager
@@ -59,11 +58,10 @@
     
     public async Task RegisterUserAsync(EditContext editContext)
     {
-        var httpclient = HttpClientFactory.CreateClient("ApiHttpClient");
-        var response = await httpclient.PostAsJsonAsync("api/account/register", RegisterInputModel);
+        var httpclient = HttpClientFactory.CreateClient("AuthorityHttpClient");
+        var response = await httpclient.PostAsJsonAsync("api/register", RegisterInputModel);
         if (response.StatusCode == HttpStatusCode.OK)
         {
-            await response.Content.ReadFromJsonAsync<RegisterResult>();
             NavigationManager.NavigateTo("/account/login");
         }
     }

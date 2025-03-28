@@ -24,8 +24,12 @@
 
   openid.blazorwasm:
     image: img-blazorwasm
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
     build:
       context: .
+      args:
+        BLAZOR_ENVIRONMENT: Production
       dockerfile: DockerOpenIdBlazorWasm/Dockerfile
     ports:
       - "7002:80"

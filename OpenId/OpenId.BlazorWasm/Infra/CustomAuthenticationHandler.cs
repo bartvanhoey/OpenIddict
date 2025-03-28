@@ -18,7 +18,8 @@ public class CustomAuthenticationHandler(
         CancellationToken cancellationToken)
     {
         var (accessToken, refreshToken) = await jwtTokenService.GetAuthTokensAsync(cancellationToken);
-        var isToServer = request.RequestUri?.AbsoluteUri.StartsWith(configuration["ApiUrl"] ?? "") ?? false;
+        var value = configuration["AuthorityUrl"];
+        var isToServer = request.RequestUri?.AbsoluteUri.StartsWith(value ?? throw new InvalidOperationException() ) ?? false;
 
         if (isToServer && !IsNullOrEmpty(accessToken))
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);

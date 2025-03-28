@@ -10,7 +10,7 @@ public class LogoutService(IHttpClientFactory clientFactory, ILocalStorageServic
     public async Task LogoutAsync()
     {
         
-        var httpClient = clientFactory.CreateClient("ApiHttpClient");
+        var httpClient = clientFactory.CreateClient("AuthorityHttpClient");
         try
         {
             await httpClient.DeleteAsync("api/account/revoke");

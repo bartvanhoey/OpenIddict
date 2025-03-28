@@ -4,12 +4,15 @@ public static class CorsRegistration
 {
     public static void AddCorsPolicy(this WebApplicationBuilder builder)
     {
+        var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
+        
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", policy =>
             {
                 policy
-                    .WithOrigins(["https://localhost:7002", "http://localhost:7002"])
+                    .WithOrigins(allowedOrigins ?? [])
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

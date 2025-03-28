@@ -15,7 +15,7 @@ public class RefreshService(
         if (IsNullOrWhiteSpace(accessToken) ) { return new AuthRefreshResult(InputAccessTokenNull ); }
         if (IsNullOrWhiteSpace(refreshToken)) { return new AuthRefreshResult(InputRefreshTokenNull); }
 
-        var httpClient = clientFactory.CreateClient("ApiHttpClient");
+        var httpClient = clientFactory.CreateClient("AuthorityHttpClient");
         
         try
         {
