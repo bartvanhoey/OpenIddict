@@ -18,17 +18,19 @@ COPY . .
 WORKDIR "/src/OpenId.BlazorWasm"
 RUN dotnet build "OpenId.BlazorWasm.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "OpenId.BlazorWasm.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM  nginxbase AS final
 WORKDIR /usr/share/nginx/html
+RUN #rm -f /usr/share/nginx/html/appsettings.json
+
+COPY  OpenId.BlazorWasm/nginx.conf /etc/nginx/nginx.conf
 
 ARG BLAZOR_ENVIRONMENT
-RUN echo 'HelloWorld'
-RUN echo ${BLAZOR_ENVIRONMENT}
+RUN echo 'Environment8=' ${BLAZOR_ENVIRONMENT}
 
+RUN sed -i "s/blazor-environment/${BLAZOR_ENVIRONMENT}/" /etc/nginx/nginx.conf
 COPY --from=publish /app/publish/wwwroot .                   
-COPY  OpenId.BlazorWasm/nginx.conf /etc/nginx/nginx.conf
-RUN sed -i 's/BLAZOR_ENVIRONMENT/${BLAZOR_ENVIRONMENT}/' /etc/nginx/nginx.conf
