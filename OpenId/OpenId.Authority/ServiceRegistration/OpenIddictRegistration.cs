@@ -16,6 +16,8 @@ public static class OpenIddictRegistration
                 options.SetAuthorizationEndpointUris("/connect/authorize");
                 options.SetTokenEndpointUris("connect/token");
         
+                options.AllowRefreshTokenFlow();
+                
                 options.AllowAuthorizationCodeFlow().RequireProofKeyForCodeExchange();
                 options.AllowClientCredentialsFlow().AllowRefreshTokenFlow();
                 options.AllowPasswordFlow().AllowRefreshTokenFlow();

@@ -152,6 +152,7 @@ public class ClientSeeder
                 {
                     OpenIddictConstants.Permissions.Endpoints.Token,
                     OpenIddictConstants.Permissions.GrantTypes.Password,
+                    OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
                    $"{OpenIddictConstants.Permissions.Prefixes.Scope}api1"
                 },
             });
