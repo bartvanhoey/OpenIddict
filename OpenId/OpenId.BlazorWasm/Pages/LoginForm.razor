@@ -78,7 +78,7 @@
         {
             var content     = await response.Content.ReadAsStringAsync();
             var result = await response.Content.ReadFromJsonAsync<LoginResult>();
-            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.access_token );
+            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.access_token, result?.refresh_token );
             NavigationManager.NavigateTo("/");
         }
     }

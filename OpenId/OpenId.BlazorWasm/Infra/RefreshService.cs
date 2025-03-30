@@ -25,13 +25,13 @@ public class RefreshService(
                 var result = await response.Content.ReadFromJsonAsync<RefreshResult>();
                 
                 if (result == null) return new AuthRefreshResult(ResponseContentNull);
-                if (IsNullOrWhiteSpace(result.AccessToken)) return new AuthRefreshResult(AccessTokenNull);
-                if (IsNullOrWhiteSpace(result.RefreshToken)) return new AuthRefreshResult(RefreshTokenNull);
-                if (!jwtTokenService.IsValid(result.AccessToken)) return new AuthRefreshResult(AccessTokenInvalid);
+                if (IsNullOrWhiteSpace(result.access_token)) return new AuthRefreshResult(AccessTokenNull);
+                if (IsNullOrWhiteSpace(result.refresh_token)) return new AuthRefreshResult(RefreshTokenNull);
+                if (!jwtTokenService.IsValid(result.access_token)) return new AuthRefreshResult(AccessTokenInvalid);
 
-                await jwtTokenService.SaveAuthTokensAsync(result.AccessToken, result.RefreshToken);
+                await jwtTokenService.SaveAuthTokensAsync(result.access_token, result.refresh_token);
 
-                return new AuthRefreshResult(result.AccessToken, result.RefreshToken, result.ValidTo);
+                return new AuthRefreshResult(result.access_token, result.refresh_token, result.expires_in);
             }
         }
         catch (Exception)

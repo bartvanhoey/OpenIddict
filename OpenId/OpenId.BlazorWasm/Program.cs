@@ -1,9 +1,11 @@
+using System.Runtime;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using OpenId.BlazorWasm;
 using OpenId.BlazorWasm.Infra;
+using OpenIddict.Client;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -20,12 +22,16 @@ builder.Services.AddAuthorizationCore();
 var serverBaseAddress = builder.Configuration["AuthorityUrl"] ?? "http://localhost:7000";
 
 builder.Services.AddTransient<CustomAuthenticationHandler>();
-builder.Services.AddHttpClient("AuthorityHttpClient",
-        client =>
-        {
-            client.BaseAddress = new Uri(serverBaseAddress);
-        })
+builder.Services.AddHttpClient("AuthorityHttpClient", client => client.BaseAddress = new Uri(serverBaseAddress))
     .AddHttpMessageHandler<CustomAuthenticationHandler>();
+
+builder.Services.AddOpenIddict().AddClient(options =>
+{
+    options.AllowPasswordFlow().AllowRefreshTokenFlow();
+    options.AddRegistration(
+        new OpenIddictClientRegistration { Issuer = new Uri(serverBaseAddress, UriKind.Absolute) });
+});
+
 
 builder.Services.RegisterServices();
 
