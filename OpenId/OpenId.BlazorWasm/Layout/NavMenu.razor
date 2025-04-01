@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject ILogoutService LogoutService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -28,7 +29,7 @@
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="account/Manage/Profile">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @Name
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
@@ -73,5 +74,14 @@
         await LogoutService.LogoutAsync();
         NavigationManager.NavigateTo("/account/login");
     }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        var user = authState.User;
+        Name = user.Identity?.Name;
+    }
+
+    public string? Name { get; set; }
 
 }

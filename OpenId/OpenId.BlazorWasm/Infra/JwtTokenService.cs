@@ -51,7 +51,20 @@ public class JwtTokenService(ILocalStorageService localStorage, IConfiguration c
     {
         if (string.IsNullOrWhiteSpace(accessToken)) return false;
         
-        // var tokenHandler = new JwtSecurityTokenHandler();
+         var tokenHandler = new JwtSecurityTokenHandler();
+         if (tokenHandler.CanReadToken(accessToken))
+         {
+             var token = tokenHandler.ReadJwtToken(accessToken);
+             Console.WriteLine($"Issuer: {token.Issuer}");
+             Console.WriteLine($"Expiration: {token.ValidTo}");
+             Console.WriteLine($"Claims: {string.Join(", ", token.Claims)}");
+         }
+         else
+         {
+             Console.WriteLine("Invalid token format.");
+         }
+         
+         
         // var validationParameters = GetValidationParameters();
         //
         // // ReSharper disable once NotAccessedOutParameterVariable

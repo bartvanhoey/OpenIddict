@@ -53,7 +53,7 @@
 @code {
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
     [SupplyParameterFromForm] private LoginInputModel LoginInputModel { get; set; } = new();
-    
+
     // Bugfix
     // ConstructorContainsNullParameterNames, System.Net.Http.FormUrlEncodedContent System.NotSupportedException: ConstructorContainsNullParameterNames, System.Net.Http.FormUrlEncodedContent
     [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors, typeof(Dictionary<string, string>))]
@@ -63,22 +63,22 @@
         { "username", "bartvanhoey@hotmail.com" },
         { "password", "Server2008!" },
         { "client_id", "blazorwasm-oidc-application" },
-        { "client_secret", "388D45FA-B36B-4988-BA59-B187D329C206" }
-            
+        { "client_secret", "388D45FA-B36B-4988-BA59-B187D329C206" },
+        { "scope", "offline_access" }
     };
-    
+
     private async Task LoginUserAsync()
     {
         var httpclient = HttpClientFactory.CreateClient("AuthorityHttpClient");
         httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
         var formUrlEncodedContent = new FormUrlEncodedContent(_values);
-        
+
         var response = await httpclient.PostAsync("connect/token", formUrlEncodedContent);
         if (response.StatusCode == HttpStatusCode.OK)
         {
-            var content     = await response.Content.ReadAsStringAsync();
+            var content = await response.Content.ReadAsStringAsync();
             var result = await response.Content.ReadFromJsonAsync<LoginResult>();
-            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.access_token, result?.refresh_token );
+            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.access_token, result?.refresh_token);
             NavigationManager.NavigateTo("/");
         }
     }
