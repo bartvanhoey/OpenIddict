@@ -1,7 +1,4 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 using OpenId.Authority.Data;
 using OpenId.Authority.ServiceRegistration;
 using OpenId.Authority.Services;

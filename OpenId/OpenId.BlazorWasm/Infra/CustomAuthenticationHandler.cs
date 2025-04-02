@@ -5,12 +5,7 @@ using static System.String;
 
 namespace OpenId.BlazorWasm.Infra;
 
-public class CustomAuthenticationHandler(
-    IConfiguration configuration,
-    IJwtTokenService jwtTokenService,
-    IHttpClientFactory clientFactory
-)
-    : DelegatingHandler
+public class CustomAuthenticationHandler(IConfiguration configuration, IJwtTokenService jwtTokenService, IHttpClientFactory clientFactory) : DelegatingHandler
 {
     private bool _refreshing;
 
@@ -28,17 +23,20 @@ public class CustomAuthenticationHandler(
         HttpResponseMessage? response = null;
         try
         {
+            var requestRequestUri = request.RequestUri;
+            if (requestRequestUri != null && requestRequestUri.ToString().EndsWith("connect/token")) request.Headers.Remove("Authorization");
             response = await base.SendAsync(request, cancellationToken);
             iShouldRefresh = response.StatusCode == HttpStatusCode.Unauthorized;
             if (iShouldRefresh == false) return response;
         }
-        catch (HttpRequestException)
+        catch (HttpRequestException httpRequestException)
         {
+            WriteLine(httpRequestException);
             iShouldRefresh = true;
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            WriteLine(e);
+            WriteLine(exception);
         }
 
         if (_refreshing || IsNullOrEmpty(accessToken) || !iShouldRefresh) return response ?? throw new InvalidOperationException();

@@ -1,16 +1,12 @@
 ﻿@page "/account/login"
-
-@using System.Diagnostics.CodeAnalysis
-@using System.Net
-@using System.Net.Http.Headers
 @using Microsoft.AspNetCore.Components.Authorization
 
 @using OpenId.BlazorWasm.Infra
 @using OpenId.Shared.Models
 @inject NavigationManager NavigationManager
-@inject IHttpClientFactory HttpClientFactory
 @inject AuthenticationStateProvider AuthState
 @inject IConfiguration Configuration
+@inject ILoginService LoginService
 
 <div class="card mt-3 shadow-sm rounded auth-card">
     <div class="px-4 pt-4">
@@ -47,47 +43,18 @@
     </div>
 </div>
 
-
-
-
 @code {
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
     [SupplyParameterFromForm] private LoginInputModel LoginInputModel { get; set; } = new();
-
-    // Bugfix
-    // ConstructorContainsNullParameterNames, System.Net.Http.FormUrlEncodedContent System.NotSupportedException: ConstructorContainsNullParameterNames, System.Net.Http.FormUrlEncodedContent
-    [DynamicDependency(DynamicallyAccessedMemberTypes.PublicConstructors, typeof(Dictionary<string, string>))]
-    private readonly Dictionary<string, string> _values = new()
-    {
-        { "grant_type", "password" },
-        { "username", "bartvanhoey@hotmail.com" },
-        { "password", "Server2008!" },
-        { "client_id", "blazorwasm-oidc-application" },
-        { "client_secret", "388D45FA-B36B-4988-BA59-B187D329C206" },
-        { "scope", "offline_access" }
-    };
-
+    
+    protected override void OnInitialized() => Environment = Configuration.GetValue<string>("Environment");
+    private string? Environment { get; set; }
     private async Task LoginUserAsync()
     {
-        var httpclient = HttpClientFactory.CreateClient("AuthorityHttpClient");
-        httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-        var formUrlEncodedContent = new FormUrlEncodedContent(_values);
-
-        var response = await httpclient.PostAsync("connect/token", formUrlEncodedContent);
-        if (response.StatusCode == HttpStatusCode.OK)
-        {
-            var result = await response.Content.ReadFromJsonAsync<LoginResult>();
-            await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.access_token, result?.refresh_token);
-            NavigationManager.NavigateTo("/");
-        }
+        var result = await LoginService.LoginUserAsync(LoginInputModel.Email, LoginInputModel.Password);
+        if (result == null)  return; 
+        
+        await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result.access_token, result.refresh_token);
+        NavigationManager.NavigateTo("/");
     }
-
-    protected override void OnInitialized()
-    {
-        Environment = Configuration.GetValue<string>("Environment");
-    }
-
-    public string? Environment { get; set; }
-
-
 }

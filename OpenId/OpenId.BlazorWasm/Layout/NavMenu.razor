@@ -1,4 +1,6 @@
-﻿@using OpenId.BlazorWasm.Infra
+﻿@using System.Diagnostics
+@using System.Security.Claims
+@using OpenId.BlazorWasm.Infra
 @using Microsoft.AspNetCore.Components.Authorization
 @inject ILogoutService LogoutService
 @inject NavigationManager NavigationManager
@@ -79,7 +81,8 @@
     {
         var authState = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
         var user = authState.User;
-        Name = user.Identity?.Name;
+        Name = user.Claims.FirstOrDefault(x => x.Type == "email")?.Value;
+        user.Claims.ToList().ForEach(x => Debug.WriteLine(x.Type + " : " + x.Value ));
     }
 
     public string? Name { get; set; }

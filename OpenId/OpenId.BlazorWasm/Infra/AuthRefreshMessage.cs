@@ -11,4 +11,5 @@ public enum AuthRefreshMessage
     ExceptionThrown = 6,
     SomethingWentWrong = 7,
     AccessTokenInvalid = 8,
+    HttpStatusCodeNok =9
 }
