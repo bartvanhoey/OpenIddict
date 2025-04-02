@@ -39,7 +39,11 @@ public class CustomAuthenticationHandler(IConfiguration configuration, IJwtToken
             WriteLine(exception);
         }
 
-        if (_refreshing || IsNullOrEmpty(accessToken) || !iShouldRefresh) return response ?? throw new InvalidOperationException();
+        if (_refreshing || IsNullOrEmpty(accessToken) || !iShouldRefresh)
+        {
+            WriteLine($"response {response?.StatusCode} - {response?.ReasonPhrase}");
+            return response ?? throw new InvalidOperationException();
+        }
 
         try
         {
