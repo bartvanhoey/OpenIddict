@@ -76,7 +76,6 @@
         var response = await httpclient.PostAsync("connect/token", formUrlEncodedContent);
         if (response.StatusCode == HttpStatusCode.OK)
         {
-            var content = await response.Content.ReadAsStringAsync();
             var result = await response.Content.ReadFromJsonAsync<LoginResult>();
             await ((CustomAuthenticationStateProvider)AuthState).UpdateAuthenticationState(result?.access_token, result?.refresh_token);
             NavigationManager.NavigateTo("/");

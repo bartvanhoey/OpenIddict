@@ -1,4 +1,3 @@
-using System.Runtime;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -31,7 +30,6 @@ builder.Services.AddOpenIddict().AddClient(options =>
     options.AddRegistration(
         new OpenIddictClientRegistration { Issuer = new Uri(serverBaseAddress, UriKind.Absolute) });
 });
-
 
 builder.Services.RegisterServices();
 
